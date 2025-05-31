@@ -1,5 +1,6 @@
-const { Client, Events, GatewayIntentBits } = require('discord.js');
+const {Events, ComponentType, ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, IntentsBitField, EmbedBuilder } = require('discord.js');
 require('dotenv').config();
+
 // Get the bot token from environment variables
 const token = process.env.DISCORD_BOT_TOKEN;
 if (!token) {
@@ -8,7 +9,10 @@ if (!token) {
 }
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+	intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMembers, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.MessageContent],
+	partials: ["MESSAGE", "CHANNEL", "GUILDS", "GUILD_MEMBERS"],
+});
 
 // When the client is ready, run this code (only once).
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
@@ -18,7 +22,7 @@ client.once(Events.ClientReady, readyClient => {
 });
 
 
-client.on('message', msg => {
+client.on('messageCreate', msg => {
 	if (msg.content === 'ping') {
 		msg.reply('pong');
 	}
